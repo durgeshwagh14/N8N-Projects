@@ -18,49 +18,6 @@ This repository includes a collection of independent **n8n projects**, each focu
 
 Each project is stored in its own folder with the respective workflow files.
 
----
-
-## 📂 Repository Structure
-
-```
-n8n-projects/
-│
-├── Project-1/
-│   └── workflow.json
-│
-├── Project-2/
-│   └── workflow.json
-│
-├── Project-3/
-│   └── workflow.json
-│
-└── README.md
-```
-
----
-
-## 🧩 Included Projects
-
-| Project Name      | Description                  |
-| ----------------- | ---------------------------- |
-| Email Automation  | Sends automated emails       |
-| Lead Management   | Captures and stores leads    |
-| Data Sync         | Syncs data between platforms |
-| Report Automation | Generates scheduled reports  |
-
-*(Update this table with your real projects)*
-
----
-
-## 🛠 Tech Stack
-
-* **n8n** – Workflow automation
-* **Node.js**
-* **REST APIs**
-* **Webhooks**
-* **JSON**
-
----
 
 ## ⚙️ Getting Started
 
