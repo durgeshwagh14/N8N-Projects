@@ -1,7 +1,3 @@
-Here’s a **professional GitHub-style README** for your **single repository containing all n8n projects**.
-You can directly copy–paste this into your `README.md`.
-
----
 
 # 🚀 n8n Automation Projects
 
