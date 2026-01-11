@@ -1,0 +1,165 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "custom",
+              "cronExpression": "10"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1mb9qTI8CHVwjYhxjlpZcSSoVe42D3H4Jl0dzqqkOFeY",
+          "mode": "list",
+          "cachedResultName": "N8n data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mb9qTI8CHVwjYhxjlpZcSSoVe42D3H4Jl0dzqqkOFeY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 595261473,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mb9qTI8CHVwjYhxjlpZcSSoVe42D3H4Jl0dzqqkOFeY/edit#gid=595261473"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -16,
+        64
+      ],
+      "id": "2788a5d1-dc44-492c-8a06-24034a1a325d",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "XW7MCar2sbrkY1Va",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "givenName": "={{ $('Google Sheets Trigger').item.json['First Name'] }}",
+        "additionalFields": {
+          "emailsUi": {
+            "emailsValues": [
+              {
+                "type": "home",
+                "value": "={{ $('Google Sheets Trigger').item.json['Email ID'] }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleContacts",
+      "typeVersion": 1,
+      "position": [
+        400,
+        64
+      ],
+      "id": "b03a7e2f-6e35-4f36-a0ca-63df6e9a30fa",
+      "name": "Create a contact",
+      "credentials": {
+        "googleContactsOAuth2Api": {
+          "id": "TSaRVz23IkhkU7aJ",
+          "name": "Google Contacts account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json['Email ID'] }}",
+        "subject": "=Application for Junior Data Scientist/Analyst Position",
+        "emailType": "text",
+        "message": "=Dear {{ $json['First Name'] }},\n\nI am a fresher with strong interest in the Junior Data Analyst role at Intuit through CodersData. I have hands-on experience with SQL, Python, Excel, Power BI, and data analysis projects. I am eager to learn, grow, and contribute to your team.\n\nPlease find my resume attached for your review. I would appreciate the opportunity to discuss this role further.\n\nThank you for your time and consideration.\n\nBest regards,\nDurgesh Wagh\nEmail: durgeshwagh1405@gmail.com\nPhone: +91-8767363217",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        192,
+        64
+      ],
+      "id": "1ffd1502-3905-4dea-bec2-7c680f0804ae",
+      "name": "Send a message",
+      "webhookId": "9c44590e-51ef-4684-94f2-8a260c9bc6ec",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "6LiliJevctuG1vyy",
+          "name": "Gmail account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "demo1view2@gmail.com",
+        "subject": "=The client {{ $('Google Sheets Trigger').item.json['First Name'] }} was added ",
+        "emailType": "text",
+        "message": "=The new clinet was added, here are some information:\n\nName: {{ $('Google Sheets Trigger').item.json['First Name'] }} {{ $('Google Sheets Trigger').item.json['Last Name'] }}\nEmail: {{ $('Google Sheets Trigger').item.json['Email ID'] }}\nCourse: {{ $('Google Sheets Trigger').item.json['Course Name'] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        608,
+        64
+      ],
+      "id": "ab0f8d78-b915-4f77-969c-201261a1f47a",
+      "name": "Send a message1",
+      "webhookId": "5e935c29-f6f1-4831-a0e8-d48ac197e208",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "6LiliJevctuG1vyy",
+          "name": "Gmail account 3"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a contact": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Create a contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "843caf09d5eb4f5129d3ff1793b06716f374ffcc34126e4f91a52740bf922439"
+  }
+}
