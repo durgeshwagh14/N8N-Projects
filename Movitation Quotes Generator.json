@@ -1,0 +1,169 @@
+{
+  "name": "Movitation Quotes Generator",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        -16
+      ],
+      "id": "9c9553cf-5e3d-440f-b15f-77603d3b9bf3",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Create a motivational quote, give just a quote itself, no extra text.",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        96,
+        -16
+      ],
+      "id": "4829babc-da9a-4ef9-a6f3-0fe6217627f5",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-safeguard-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        48,
+        176
+      ],
+      "id": "2210dea0-9dbe-442f-82a7-0eda291fd4ef",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "kohCmN6qOCbZlNn3",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json['Email ID'] }}",
+        "subject": "Movitational Quotes",
+        "emailType": "text",
+        "message": "=Hii {{ $json.Name }}\n\nTodays Motivational Quotes is : \n{{ $('Basic LLM Chain').item.json.text }}\n\n\nThank you for your time 😁",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        656,
+        -16
+      ],
+      "id": "422a5580-ca09-4a29-bb46-63aa03e2167e",
+      "name": "Send a message",
+      "webhookId": "81acef53-1141-42cd-9846-9117c24355d4",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "6LiliJevctuG1vyy",
+          "name": "Gmail account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1mb9qTI8CHVwjYhxjlpZcSSoVe42D3H4Jl0dzqqkOFeY",
+          "mode": "list",
+          "cachedResultName": "N8n data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mb9qTI8CHVwjYhxjlpZcSSoVe42D3H4Jl0dzqqkOFeY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1511037167,
+          "mode": "list",
+          "cachedResultName": "Sheet4",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mb9qTI8CHVwjYhxjlpZcSSoVe42D3H4Jl0dzqqkOFeY/edit#gid=1511037167"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        -16
+      ],
+      "id": "409dd95c-f930-4775-a27b-3fb3a017dc06",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Rh513DGtlhchsPlA",
+          "name": "Google Sheets account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "333ac9d0-796e-4791-9d2d-3dae6667111d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "843caf09d5eb4f5129d3ff1793b06716f374ffcc34126e4f91a52740bf922439"
+  },
+  "id": "akH6-VQ-yI_l8CLQXFz6u",
+  "tags": []
+}

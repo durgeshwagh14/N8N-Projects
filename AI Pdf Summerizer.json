@@ -1,0 +1,235 @@
+{
+  "name": "AI Pdf Summerizer",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "AI PDF Summerizer",
+        "formDescription": "Upload Your Pdf to get sumerize",
+        "formFields": {
+          "values": [
+            {
+              "fieldName": "Choose File",
+              "fieldLabel": "Choose File",
+              "fieldType": "file"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "170139bb-6ac7-4fc4-b364-8df662d349ff",
+      "name": "On form submission",
+      "webhookId": "3545060f-4539-4225-80ba-15739f4cc8b5"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "Choose_File",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "16f789d3-c651-4925-a47d-c64e4171908e",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "typeVersion": 1,
+      "position": [
+        592,
+        208
+      ],
+      "id": "a5c163ab-ce6c-45cd-82a8-01a437279066",
+      "name": "Wikipedia"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1mb9qTI8CHVwjYhxjlpZcSSoVe42D3H4Jl0dzqqkOFeY",
+          "mode": "list",
+          "cachedResultName": "N8n data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mb9qTI8CHVwjYhxjlpZcSSoVe42D3H4Jl0dzqqkOFeY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 270039821,
+          "mode": "list",
+          "cachedResultName": "Sheet6",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mb9qTI8CHVwjYhxjlpZcSSoVe42D3H4Jl0dzqqkOFeY/edit#gid=270039821"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Summary": "={{ $json.output }}",
+            "Date Added": "={{ $('On form submission').item.json.submittedAt }}",
+            "Titile": "={{ $('On form submission').item.json['Choose File'][0].filename }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Titile",
+              "displayName": "Titile",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date Added",
+              "displayName": "Date Added",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        768,
+        0
+      ],
+      "id": "a7edae53-c3c1-4956-9a56-cd19103c127b",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Rh513DGtlhchsPlA",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Summarize this text: {{ $json.text}}\n\nUse wikipedia tool, for searching additional information about the subject",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "50f87e34-403b-4127-b7b5-a3b2a9e20760",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-safeguard-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        288,
+        208
+      ],
+      "id": "1b23e035-289d-4c3a-8755-5cce39a874ce",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "kohCmN6qOCbZlNn3",
+          "name": "Groq account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wikipedia": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "a722ac8a-0a45-46a7-8d71-cbb8ba3cfa1b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "843caf09d5eb4f5129d3ff1793b06716f374ffcc34126e4f91a52740bf922439"
+  },
+  "id": "M9uo9sAs9UAveOr33E0yI",
+  "tags": []
+}
